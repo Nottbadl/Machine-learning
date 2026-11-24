@@ -763,6 +763,30 @@ st.markdown("""
             padding: 1.4rem 1.4rem;
             border-radius: 18px;
         }
+
+        /* ── SUSUN VERTIKAL: FOTO DI ATAS, KARTU HASIL DIAGNOSIS DI BAWAH (MOBILE & TABLET <= 900px) ── */
+        div[data-testid="stHorizontalBlock"]:not([data-testid="stTabContent"] div[data-testid="stHorizontalBlock"]) {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+        }
+        div[data-testid="stHorizontalBlock"]:not([data-testid="stTabContent"] div[data-testid="stHorizontalBlock"]) > div[data-testid="stColumn"] {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            flex: 1 1 100% !important;
+        }
+        /* Format gambar terpusat dan proporsional di mobile & tablet */
+        div[data-testid="stHorizontalBlock"]:not([data-testid="stTabContent"] div[data-testid="stHorizontalBlock"]) > div[data-testid="stColumn"]:first-child [data-testid="stImage"] {
+            max-width: 440px !important;
+            margin: 0 auto !important;
+        }
+        div[data-testid="stHorizontalBlock"]:not([data-testid="stTabContent"] div[data-testid="stHorizontalBlock"]) > div[data-testid="stColumn"]:first-child [data-testid="stImage"] img {
+            border-radius: 20px !important;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
+            max-height: 380px !important;
+            object-fit: cover !important;
+        }
     }
 
     @media (max-width: 600px) {
@@ -803,12 +827,12 @@ st.markdown("""
         .stat-value {
             font-size: 0.82rem;
         }
-        /* Mobile Wrap untuk Kolom Tombol Sampel & Stat */
-        div[data-testid="stHorizontalBlock"] {
+        /* Mobile Wrap khusus Kolom Tombol Sampel di dalam Tab */
+        [data-testid="stTabContent"] div[data-testid="stHorizontalBlock"] {
             flex-wrap: wrap !important;
             gap: 8px !important;
         }
-        div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+        [data-testid="stTabContent"] div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
             min-width: 46% !important;
             flex: 1 1 46% !important;
         }
@@ -1531,16 +1555,16 @@ if image_data is not None:
 
     with col_kiri:
         st.markdown("""
-<div style="font-weight:800; font-size:1rem; color:#0f172a; margin-bottom:0.6rem;">
-📸 Foto yang Dianalisis
+<div style="font-weight:800; font-size:1.05rem; color:#f8fafc; margin-bottom:0.6rem; display:flex; align-items:center; gap:8px;">
+<span>📸</span> <span>Foto yang Dianalisis</span>
 </div>
 """, unsafe_allow_html=True)
         # Frame gambar
         st.image(image_rgb, use_container_width=True)
         st.markdown(f"""
-<div style="background:#f1f5f9; border:1px solid #e2e8f0; border-radius:10px; padding:0.5rem 0.9rem; margin-top:0.4rem; display:flex; justify-content:space-between; align-items:center;">
-<span style="font-size:0.78rem; color:#64748b; font-weight:600;">📐 Dimensi</span>
-<span style="font-size:0.82rem; font-weight:700; color:#334155;">{image_rgb.size[0]} × {image_rgb.size[1]} px</span>
+<div style="background:#1e293b; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.55rem 1rem; margin-top:0.5rem; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.25);">
+<span style="font-size:0.8rem; color:#94a3b8; font-weight:600;">📐 Dimensi Citra</span>
+<span style="font-size:0.84rem; font-weight:700; color:#38bdf8; letter-spacing:0.3px;">{image_rgb.size[0]} × {image_rgb.size[1]} px</span>
 </div>
 """, unsafe_allow_html=True)
         st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
@@ -1551,8 +1575,8 @@ if image_data is not None:
 
     with col_kanan:
         st.markdown("""
-<div style="font-weight:800; font-size:1rem; color:#0f172a; margin-bottom:0.6rem;">
-🤖 Hasil Diagnosis AI
+<div style="font-weight:800; font-size:1.05rem; color:#f8fafc; margin-bottom:0.6rem; display:flex; align-items:center; gap:8px;">
+<span>🤖</span> <span>Hasil Diagnosis AI</span>
 </div>
 """, unsafe_allow_html=True)
 
