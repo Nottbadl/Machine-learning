@@ -1,0 +1,17 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# Abaikan dataset mentah yang berukuran gigabyte
+dataset_cabai/
+dataset_cabai_baru/
+dataset_cabai_unified/
+
+# Log & file sementara
+*.log
+.DS_Store
+Thumbs.db
