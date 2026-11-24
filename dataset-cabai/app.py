@@ -29,15 +29,16 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
-    /* ── Global Reset ── */
+    /* ── Global Reset & Smooth Scroll ── */
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        color: #1e293b;
+        color: #0f172a;
+        scroll-behavior: smooth;
     }
     .block-container {
-        padding-top: 1.5rem;
+        padding-top: 1.2rem;
         padding-bottom: 4rem;
-        max-width: 1180px;
+        max-width: 1140px;
     }
     /* Hide Streamlit default header decoration */
     header[data-testid="stHeader"] { background: transparent; }
@@ -45,134 +46,470 @@ st.markdown("""
 
     /* ── HERO BANNER ── */
     .hero-banner {
-        background: linear-gradient(135deg, #052e16 0%, #064e3b 40%, #047857 75%, #10b981 100%);
-        border-radius: 24px;
-        padding: 2.4rem 3rem;
+        background: linear-gradient(135deg, #052e16 0%, #064e3b 35%, #047857 70%, #059669 100%);
+        border-radius: 26px;
+        padding: 2.5rem 3rem;
         color: white;
         margin-bottom: 1.8rem;
-        box-shadow: 0 20px 40px -12px rgba(5, 150, 105, 0.4);
+        box-shadow: 0 20px 40px -12px rgba(5, 150, 105, 0.38), 0 4px 12px rgba(0, 0, 0, 0.05);
         position: relative;
         overflow: hidden;
+        animation: fadeIn 0.5s ease-out;
     }
     .hero-banner::before {
         content: "🌶️";
         position: absolute;
-        right: 2.5rem;
+        right: 2rem;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 7rem;
-        opacity: 0.12;
+        font-size: 8.5rem;
+        opacity: 0.14;
         pointer-events: none;
+        transition: transform 0.4s ease;
+    }
+    .hero-banner:hover::before {
+        transform: translateY(-50%) scale(1.05) rotate(5deg);
     }
     .hero-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 7px;
-        background: rgba(255,255,255,0.15);
-        border: 1px solid rgba(255,255,255,0.28);
-        padding: 4px 14px;
+        gap: 8px;
+        background: rgba(255,255,255,0.18);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.32);
+        padding: 5px 15px;
         border-radius: 50px;
-        font-size: 0.75rem;
+        font-size: 0.78rem;
         font-weight: 700;
-        letter-spacing: 1px;
+        letter-spacing: 0.8px;
         text-transform: uppercase;
-        margin-bottom: 0.9rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.6rem;
         font-weight: 800;
         margin: 0 0 0.5rem 0;
         letter-spacing: -0.8px;
         line-height: 1.15;
     }
     .hero-subtitle {
-        font-size: 1rem;
-        opacity: 0.88;
-        max-width: 600px;
+        font-size: 1.02rem;
+        opacity: 0.92;
+        max-width: 620px;
         line-height: 1.6;
         color: #d1fae5;
         margin: 0;
     }
     .hero-stats {
         display: flex;
-        gap: 2rem;
-        margin-top: 1.4rem;
+        gap: 2.2rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
     }
     .hero-stat-item {
         display: flex;
         flex-direction: column;
     }
     .hero-stat-num {
-        font-size: 1.35rem;
+        font-size: 1.4rem;
         font-weight: 800;
-        color: #fff;
+        color: #ffffff;
     }
     .hero-stat-lbl {
-        font-size: 0.74rem;
-        color: rgba(255,255,255,0.65);
-        font-weight: 500;
+        font-size: 0.76rem;
+        color: rgba(255,255,255,0.72);
+        font-weight: 600;
         letter-spacing: 0.3px;
     }
 
-    /* ── STEP GUIDE PILLS ── */
-    .steps-row {
+    /* ── STEP GUIDE (RESPONSIVE GRID) ── */
+    .steps-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-bottom: 1.6rem;
+        gap: 14px;
+        margin-bottom: 1.8rem;
     }
     .step-box {
         background: #ffffff;
         border: 1.5px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 1rem 1.2rem;
+        border-radius: 18px;
+        padding: 1.1rem 1.3rem;
         display: flex;
         align-items: center;
-        gap: 13px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        transition: box-shadow 0.2s;
+        gap: 14px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
     }
-    .step-box:hover { box-shadow: 0 4px 14px rgba(5,150,105,0.1); border-color: #a7f3d0; }
+    .step-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px -4px rgba(5, 150, 105, 0.15);
+        border-color: #34d399;
+    }
     .step-num {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
         color: #047857;
         font-weight: 800;
-        min-width: 34px;
-        height: 34px;
+        min-width: 38px;
+        height: 38px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         border: 1.5px solid #a7f3d0;
-        box-shadow: 0 2px 6px rgba(5,150,105,0.15);
+        box-shadow: 0 2px 6px rgba(5, 150, 105, 0.15);
+        flex-shrink: 0;
     }
-    .step-title { font-weight: 700; font-size: 0.93rem; color: #0f172a; }
-    .step-desc  { font-size: 0.78rem; color: #64748b; margin-top: 1px; }
+    .step-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #0f172a;
+        line-height: 1.3;
+    }
+    .step-desc {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-top: 2px;
+        line-height: 1.4;
+    }
 
-    /* ── CARDS ── */
+    /* ── MODERN TABS DESIGN (HIJAU EMERALD & SUDUT HALUS & SHADOW) ── */
+    .stTabs {
+        margin-top: 0.5rem;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        background: #141c17 !important;
+        border-radius: 18px !important;
+        padding: 6px !important;
+        gap: 8px !important;
+        border: 1.5px solid #1f2d24 !important;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+        display: flex !important;
+        border-bottom: none !important;
+    }
+    /* Sembunyikan garis merah bawaan Streamlit secara total */
+    .stTabs [data-baseweb="tab-highlight"],
+    .stTabs div[data-baseweb="tab-highlight"],
+    div[data-baseweb="tab-highlight"],
+    .stTabs [data-baseweb="tab-border"],
+    div[data-baseweb="tab-border"] {
+        display: none !important;
+        height: 0px !important;
+        visibility: hidden !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background: transparent !important;
+        border: 1.5px solid transparent !important;
+        border-radius: 14px !important;
+        padding: 9px 20px !important;
+        color: #94a3b8 !important;
+        font-weight: 700 !important;
+        font-size: 0.9rem !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        cursor: pointer !important;
+        outline: none !important;
+        box-shadow: none !important;
+        border-bottom: none !important;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(5, 150, 105, 0.12) !important;
+        color: #34d399 !important;
+        border-color: rgba(52, 211, 153, 0.25) !important;
+        transform: translateY(-1px) !important;
+    }
+    .stTabs [data-baseweb="tab"]:active {
+        transform: scale(0.97) !important;
+    }
+    /* TAB AKTIF: HIJAU EMERALD, SUDUT HALUS, SHADOW BERSINAR */
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+        background-color: #059669 !important;
+        color: #ffffff !important;
+        border: 1.5px solid #34d399 !important;
+        border-radius: 14px !important;
+        padding: 9px 22px !important;
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5), 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+        transform: translateY(-2px) !important;
+        font-weight: 800 !important;
+        border-bottom: 1.5px solid #34d399 !important;
+    }
+    .stTabs [aria-selected="true"] * {
+        color: #ffffff !important;
+        font-weight: 800 !important;
+    }
+
+    /* ── FILE UPLOADER ENHANCEMENTS ── */
+    [data-testid="stFileUploader"] {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+    [data-testid="stFileUploader"] label,
+    [data-testid="stFileUploader"] label p,
+    [data-testid="stFileUploader"] [data-testid="stWidgetLabel"] {
+        color: #0f172a !important;
+        font-weight: 800 !important;
+        font-size: 0.96rem !important;
+        margin-bottom: 0.6rem !important;
+    }
+    [data-testid="stFileUploaderDropzone"],
+    section[data-testid="stFileUploadDropzone"] {
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+        border: 2px dashed #059669 !important;
+        border-radius: 20px !important;
+        padding: 2.2rem 1.8rem !important;
+        text-align: center !important;
+        box-shadow: 0 4px 20px -2px rgba(5, 150, 105, 0.08) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        cursor: pointer !important;
+    }
+    [data-testid="stFileUploaderDropzone"]:hover,
+    section[data-testid="stFileUploadDropzone"]:hover {
+        border-color: #10b981 !important;
+        background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%) !important;
+        box-shadow: 0 10px 28px -4px rgba(5, 150, 105, 0.18) !important;
+        transform: translateY(-2px) !important;
+    }
+    [data-testid="stFileUploaderDropzone"] span,
+    [data-testid="stFileUploaderDropzone"] small,
+    [data-testid="stFileUploaderDropzone"] div,
+    section[data-testid="stFileUploadDropzone"] span,
+    section[data-testid="stFileUploadDropzone"] small,
+    section[data-testid="stFileUploadDropzone"] div {
+        color: #334155 !important;
+        font-weight: 600 !important;
+    }
+    /* Tombol Upload bawaan Streamlit di dalam Dropzone */
+    [data-testid="stFileUploaderDropzone"] button,
+    section[data-testid="stFileUploadDropzone"] button {
+        background: linear-gradient(135deg, #047857 0%, #059669 100%) !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 0.92rem !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 0.65rem 1.6rem !important;
+        box-shadow: 0 4px 14px rgba(5, 150, 105, 0.28) !important;
+        transition: all 0.25s ease !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button:hover,
+    section[data-testid="stFileUploadDropzone"] button:hover {
+        background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4) !important;
+        transform: translateY(-2px) scale(1.02) !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button:active,
+    section[data-testid="stFileUploadDropzone"] button:active {
+        transform: scale(0.98) !important;
+    }
+
+    /* ── SIDEBAR STYLING: SENADA & MENYATU DENGAN TEMA BERANDA ── */
+    section[data-testid="stSidebar"],
+    [data-testid="stSidebarContent"],
+    [data-testid="stSidebar"] > div {
+        background: #0e1117 !important;
+        background-color: #0e1117 !important;
+        border-right: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    section[data-testid="stSidebar"] .block-container {
+        padding-top: 1.6rem;
+    }
+    /* Brand Box di Sidebar */
+    .sidebar-brand-card {
+        background: linear-gradient(135deg, #064e3b 0%, #047857 60%, #059669 100%);
+        border-radius: 20px;
+        padding: 1.4rem 1.2rem;
+        text-align: center;
+        color: white;
+        margin-bottom: 1.2rem;
+        box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        transition: transform 0.25s ease;
+    }
+    .sidebar-brand-card:hover {
+        transform: translateY(-2px);
+    }
+    .sidebar-brand-icon {
+        font-size: 2.6rem;
+        display: inline-block;
+        filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+        margin-bottom: 0.25rem;
+    }
+    .sidebar-brand-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+        color: #ffffff;
+    }
+    .sidebar-brand-subtitle {
+        font-size: 0.78rem;
+        color: #d1fae5;
+        font-weight: 500;
+        margin-top: 2px;
+    }
+    /* Card Tips di Sidebar (Senada Tema Beranda) */
+    .sidebar-tips-card {
+        background: #141c17 !important;
+        border: 1.5px solid #065f46 !important;
+        border-radius: 18px;
+        padding: 1.2rem 1.25rem;
+        margin-bottom: 1.1rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+        transition: all 0.25s ease;
+    }
+    .sidebar-tips-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(5, 150, 105, 0.2) !important;
+        border-color: #10b981 !important;
+    }
+    .sidebar-tips-title {
+        font-weight: 800;
+        color: #34d399 !important;
+        font-size: 0.94rem;
+        margin-bottom: 0.65rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .sidebar-tips-item {
+        font-size: 0.84rem;
+        color: #e2e8f0 !important;
+        line-height: 1.85;
+    }
+    .sidebar-tips-item b {
+        color: #a7f3d0 !important;
+    }
+
+    /* ── EXPANDER DI SIDEBAR (SENADA BERANDA: KONTRAST TEGAS & ELEGAN) ── */
+    [data-testid="stSidebar"] [data-testid="stExpander"],
+    [data-testid="stSidebar"] .stExpander,
+    [data-testid="stSidebar"] details[data-testid="stExpander"] {
+        background: #141c17 !important;
+        background-color: #141c17 !important;
+        border: 1.5px solid #1f2d24 !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+        margin-bottom: 0.9rem !important;
+        overflow: hidden !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stExpander"]:hover,
+    [data-testid="stSidebar"] .stExpander:hover {
+        border-color: #059669 !important;
+        box-shadow: 0 6px 22px rgba(5, 150, 105, 0.18) !important;
+        transform: translateY(-1px) !important;
+    }
+    /* Header Summary Expander Default di Sidebar */
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary,
+    [data-testid="stSidebar"] .stExpander summary,
+    [data-testid="stSidebar"] details summary {
+        background-color: #141c17 !important;
+        background: #141c17 !important;
+        padding: 0.9rem 1.1rem !important;
+        font-weight: 800 !important;
+        color: #f8fafc !important;
+        font-size: 0.9rem !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary *,
+    [data-testid="stSidebar"] .stExpander summary *,
+    [data-testid="stSidebar"] details summary * {
+        color: #f8fafc !important;
+        font-weight: 800 !important;
+    }
+    /* Saat Header Expander di-Hover, di-Klik, Terbuka (Details Open) */
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary:hover,
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary:focus,
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary:active,
+    [data-testid="stSidebar"] details[open] > summary,
+    [data-testid="stSidebar"] [data-testid="stExpander"] details[open] > summary,
+    [data-testid="stSidebar"] .stExpander details[open] > summary,
+    [data-testid="stSidebar"] [data-testid="stExpander"] [aria-expanded="true"] {
+        background: linear-gradient(135deg, #064e3b 0%, #047857 100%) !important;
+        color: #ffffff !important;
+        border-bottom: 1px solid #059669 !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary:hover *,
+    [data-testid="stSidebar"] [data-testid="stExpander"] details[open] > summary *,
+    [data-testid="stSidebar"] details[open] > summary * {
+        color: #ffffff !important;
+        font-weight: 800 !important;
+    }
+    /* Icon Panah Chevron di Header Expander */
+    [data-testid="stSidebar"] [data-testid="stExpander"] summary svg,
+    [data-testid="stSidebar"] .stExpander summary svg,
+    [data-testid="stSidebar"] details summary svg {
+        color: #34d399 !important;
+        fill: #34d399 !important;
+    }
+    /* Konten Body di dalam Expander */
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"],
+    [data-testid="stSidebar"] [data-testid="stExpander"] [data-testid="stExpanderDetails"],
+    [data-testid="stSidebar"] .stExpander [data-testid="stExpanderDetails"] {
+        background-color: #0f1511 !important;
+        background: #0f1511 !important;
+        padding: 1.1rem !important;
+    }
+    /* SEMUA TEKS WIDGET DI DALAM SIDEBAR & EXPANDER: PUTIH TERANG & KONTRAS */
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] label p,
+    [data-testid="stSidebar"] [data-testid="stWidgetLabel"],
+    [data-testid="stSidebar"] [data-testid="stWidgetLabel"] *,
+    [data-testid="stSidebar"] [data-baseweb="radio"] *,
+    [data-testid="stSidebar"] [data-baseweb="slider"] *,
+    [data-testid="stSidebar"] .stRadio *,
+    [data-testid="stSidebar"] .stRadio label,
+    [data-testid="stSidebar"] .stRadio label p,
+    [data-testid="stSidebar"] .stRadio label span,
+    [data-testid="stSidebar"] [data-testid="stSlider"] label,
+    [data-testid="stSidebar"] [data-testid="stSlider"] div,
+    [data-testid="stSidebar"] [data-testid="stSlider"] span,
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"] p,
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"] span,
+    [data-testid="stSidebar"] [data-testid="stExpanderDetails"] div,
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] span {
+        color: #f1f5f9 !important;
+        font-weight: 600 !important;
+    }
+    /* Slider styling di Sidebar */
+    [data-testid="stSidebar"] [data-testid="stSlider"] [role="slider"] {
+        background-color: #10b981 !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5) !important;
+    }
+    /* ── CARDS & BADGES (SUDUT HALUS & MEWAH SHADOW) ── */
     .card-pro {
         background: #ffffff;
-        border-radius: 20px;
-        padding: 1.6rem 1.8rem;
+        border-radius: 26px !important;
+        padding: 1.9rem 2.1rem;
         border: 1.5px solid #e8edf3;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        margin-bottom: 1rem;
+        box-shadow: 0 16px 40px -6px rgba(0, 0, 0, 0.25), 0 4px 14px rgba(0, 0, 0, 0.1) !important;
+        margin-bottom: 1.2rem;
+        transition: all 0.28s ease;
+        overflow: hidden !important;
+    }
+    .card-pro:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 48px -6px rgba(0, 0, 0, 0.32) !important;
     }
     .card-section {
-        background: #f8fafc;
-        border-radius: 14px;
+        background: #141c17;
+        border-radius: 16px;
         padding: 1.2rem 1.4rem;
-        border: 1px solid #e8edf3;
+        border: 1.5px solid #1f2d24;
         margin-bottom: 0.8rem;
+        color: #f1f5f9;
     }
-
-    /* ── DIAGNOSIS BADGES ── */
     .diag-badge {
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        padding: 5px 15px;
+        padding: 6px 16px;
         border-radius: 50px;
         font-weight: 700;
         font-size: 0.82rem;
@@ -190,40 +527,97 @@ st.markdown("""
         gap: 2px;
         background: #f0fdf4;
         border: 1.5px solid #86efac;
-        border-radius: 12px;
+        border-radius: 14px;
         padding: 6px 16px;
+        box-shadow: 0 2px 8px rgba(21, 128, 61, 0.08);
     }
     .conf-num  { font-size: 2rem; font-weight: 800; color: #15803d; line-height: 1; }
     .conf-unit { font-size: 1rem; font-weight: 700; color: #15803d; }
-    .conf-pill-red   { border-color: #fca5a5; background: #fff1f2; }
+    .conf-pill-red   { border-color: #fca5a5; background: #fff1f2; box-shadow: 0 2px 8px rgba(185, 28, 28, 0.08); }
     .conf-num-red    { color: #b91c1c; }
     .conf-unit-red   { color: #b91c1c; }
-    .conf-pill-amber { border-color: #fde047; background: #fefce8; }
+    .conf-pill-amber { border-color: #fde047; background: #fefce8; box-shadow: 0 2px 8px rgba(146, 64, 14, 0.08); }
     .conf-num-amber  { color: #92400e; }
     .conf-unit-amber { color: #92400e; }
 
-    /* ── STAT CARDS ── */
+    /* ── STAT GRID & STAT CARDS (RESPONSIF MOBILE / TABLET) ── */
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 0.8rem;
+    }
     .stat-card {
-        background: #fff;
-        border: 1.5px solid #e8edf3;
-        border-radius: 14px;
-        padding: 0.9rem 1rem 0.8rem;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 0.95rem 0.8rem 0.85rem;
         text-align: center;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        transition: all 0.22s ease;
+        min-width: 0;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        border-color: #cbd5e1;
     }
     .stat-label {
-        font-size: 0.7rem;
-        color: #94a3b8;
+        font-size: 0.74rem;
+        color: #64748b;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        margin-bottom: 0.3rem;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.35rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .stat-value {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 800;
         color: #0f172a;
         line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    @media (max-width: 768px) {
+        .stat-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .stat-card {
+            padding: 0.75rem 0.4rem;
+            border-radius: 14px;
+        }
+        .stat-label {
+            font-size: 0.65rem;
+            letter-spacing: 0px;
+        }
+        .stat-value {
+            font-size: 0.8rem;
+        }
+    }
+    @media (max-width: 480px) {
+        .stat-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        .stat-card {
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+        .stat-label {
+            margin-bottom: 0;
+            font-size: 0.78rem;
+        }
+        .stat-value {
+            font-size: 0.9rem;
+        }
     }
 
     /* ── PROGRESS BARS ── */
@@ -231,170 +625,208 @@ st.markdown("""
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.87rem;
+        font-size: 0.88rem;
         margin-bottom: 4px;
     }
     .prob-bar-track {
         background: #f1f5f9;
         border-radius: 50px;
-        height: 8px;
+        height: 9px;
         overflow: hidden;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
     .prob-bar-fill {
         height: 100%;
         border-radius: 50px;
-        transition: width 0.6s ease;
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* ── ACTION STEPS ── */
     .action-step {
         background: #f8fafc;
         border-left: 4px solid #059669;
-        border-radius: 0 12px 12px 0;
-        padding: 0.9rem 1.2rem;
-        margin-bottom: 0.65rem;
-        font-size: 0.91rem;
+        border-radius: 0 14px 14px 0;
+        padding: 0.95rem 1.25rem;
+        margin-bottom: 0.7rem;
+        font-size: 0.92rem;
         color: #334155;
-        line-height: 1.55;
+        line-height: 1.6;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
     .action-step-warn { border-left-color: #f59e0b; background: #fffbeb; }
     .action-step-red  { border-left-color: #ef4444; background: #fff5f5; }
 
     /* ── SINERGI BOX ── */
     .sinergi-box {
-        background: linear-gradient(135deg, #fffbeb, #fff7ed);
+        background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%);
         border: 1.5px solid #fcd34d;
-        border-radius: 16px;
-        padding: 1.1rem 1.4rem;
-        margin: 0.9rem 0;
-    }
-
-    /* ── IMAGE FRAME ── */
-    .img-frame {
-        background: #f8fafc;
-        border: 2px solid #e2e8f0;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    }
-    .img-caption {
-        background: #f1f5f9;
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
-        color: #64748b;
-        font-weight: 600;
-        text-align: center;
-        border-top: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 1.2rem 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.08);
     }
 
     /* ── EMPTY STATE ── */
     .empty-state {
-        background: #f8fafc;
-        border: 2.5px dashed #cbd5e1;
-        border-radius: 24px;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 2px dashed #cbd5e1;
+        border-radius: 26px;
         padding: 4rem 2rem;
         text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
     /* ── REJECT CARD ── */
     .reject-card {
-        background: linear-gradient(135deg, #fff5f5, #fff8f0);
+        background: linear-gradient(135deg, #fff5f5 0%, #fff8f0 100%);
         border: 1.5px solid #fca5a5;
         border-left: 5px solid #ef4444;
-        border-radius: 20px;
-        padding: 1.6rem 1.8rem;
+        border-radius: 22px;
+        padding: 1.8rem 2rem;
+        box-shadow: 0 8px 24px rgba(239, 68, 68, 0.08);
     }
 
     /* ── BUTTONS ── */
     div.stButton > button {
-        border-radius: 12px !important;
+        border-radius: 14px !important;
         font-weight: 700 !important;
         font-size: 0.88rem !important;
-        padding: 0.55rem 1.2rem !important;
-        transition: all 0.2s ease !important;
+        padding: 0.6rem 1.3rem !important;
+        transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border: 1.5px solid #e2e8f0 !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    }
+    div.stButton > button:hover {
+        border-color: #10b981 !important;
+        background: #f0fdf4 !important;
+        color: #047857 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 18px rgba(5, 150, 105, 0.14) !important;
+    }
+    div.stButton > button:active {
+        transform: scale(0.97) !important;
     }
     div.stDownloadButton > button {
-        border-radius: 12px !important;
+        border-radius: 14px !important;
         font-weight: 700 !important;
-        background: linear-gradient(135deg, #047857, #059669) !important;
+        background: linear-gradient(135deg, #047857 0%, #059669 100%) !important;
         color: white !important;
         border: none !important;
-        padding: 0.65rem 1.5rem !important;
-        box-shadow: 0 4px 12px rgba(5,150,105,0.25) !important;
+        padding: 0.75rem 1.8rem !important;
+        box-shadow: 0 6px 18px rgba(5, 150, 105, 0.28) !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     div.stDownloadButton > button:hover {
-        box-shadow: 0 6px 18px rgba(5,150,105,0.35) !important;
-        transform: translateY(-1px) !important;
+        box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4) !important;
+        transform: translateY(-2px) scale(1.01) !important;
     }
 
-    /* ── FILE UPLOADER ── */
-    [data-testid="stFileUploader"] {
-        border: 2px dashed #cbd5e1 !important;
-        border-radius: 16px !important;
-        background: #f8fafc !important;
-        padding: 0.5rem !important;
-        transition: border-color 0.2s;
-    }
-    [data-testid="stFileUploader"]:hover { border-color: #059669 !important; }
-
-    /* ── TABS ── */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
-        background: #f1f5f9;
-        border-radius: 14px;
-        padding: 4px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        border-radius: 10px !important;
-        padding: 7px 18px !important;
-        font-weight: 600 !important;
-        font-size: 0.88rem !important;
-        color: #64748b !important;
-        background: transparent !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background: #ffffff !important;
-        color: #047857 !important;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── SIDEBAR ── */
-    section[data-testid="stSidebar"] {
-        background: #f8fafc;
-        border-right: 1px solid #e2e8f0;
-    }
-    section[data-testid="stSidebar"] .block-container {
-        padding-top: 1.5rem;
+    /* ── MOBILE & TABLET RESPONSIVENESS ── */
+    @media (max-width: 900px) {
+        .block-container {
+            padding-top: 1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .hero-banner {
+            padding: 1.8rem 1.6rem;
+            border-radius: 20px;
+        }
+        .hero-banner::before {
+            font-size: 5.5rem;
+            right: 1rem;
+            opacity: 0.08;
+        }
+        .hero-title {
+            font-size: 2.1rem;
+        }
+        .hero-subtitle {
+            font-size: 0.95rem;
+        }
+        .hero-stats {
+            gap: 1.4rem;
+        }
+        .steps-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .step-box {
+            padding: 0.9rem 1.1rem;
+        }
+        .card-pro {
+            padding: 1.4rem 1.4rem;
+            border-radius: 18px;
+        }
     }
 
-    /* ── SPINNER ── */
-    .stSpinner > div { border-top-color: #059669 !important; }
-
-    /* ── DIVIDER ── */
-    hr { border-color: #e8edf3 !important; margin: 1.4rem 0 !important; }
-
-    /* ── SAMPLE BUTTONS ── */
-    .sample-btn-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        margin-top: 0.8rem;
+    @media (max-width: 600px) {
+        .hero-banner {
+            padding: 1.5rem 1.2rem;
+            border-radius: 18px;
+        }
+        .hero-title {
+            font-size: 1.75rem;
+        }
+        .hero-stats {
+            gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .hero-stat-num {
+            font-size: 1.15rem;
+        }
+        .hero-stat-lbl {
+            font-size: 0.7rem;
+        }
+        .stTabs [data-baseweb="tab-list"] {
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 4px !important;
+        }
+        .stTabs [data-baseweb="tab"] {
+            padding: 7px 14px !important;
+            font-size: 0.82rem !important;
+            white-space: nowrap !important;
+        }
+        .stat-card {
+            padding: 0.75rem 0.6rem;
+        }
+        .stat-label {
+            font-size: 0.65rem;
+        }
+        .stat-value {
+            font-size: 0.82rem;
+        }
+        /* Mobile Wrap untuk Kolom Tombol Sampel & Stat */
+        div[data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+        }
+        div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+            min-width: 46% !important;
+            flex: 1 1 46% !important;
+        }
     }
-    .sample-pill {
-        background: #fff;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 50px;
-        padding: 7px 14px;
-        font-size: 0.84rem;
-        font-weight: 600;
-        color: #334155;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.18s;
-    }
-    .sample-pill:hover { background: #f0fdf4; border-color: #86efac; color: #047857; }
 
+    /* Fallback Kontras Teks Uploader & Icon */
+    [data-testid="stFileUploaderDropzoneInstructions"],
+    [data-testid="stFileUploaderDropzone"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stFileUploaderDropzone"] p,
+    section[data-testid="stFileUploadDropzone"] small,
+    section[data-testid="stFileUploadDropzone"] span {
+        color: #475569 !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stFileUploaderDropzone"]:focus-within {
+        border-color: #059669 !important;
+        box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.18) !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -910,24 +1342,22 @@ except Exception as e:
 # ==========================================
 with st.sidebar:
     st.markdown("""
-<div style="text-align:center; padding: 0.5rem 0 1rem;">
-<span style="font-size:2.8rem;">🌶️</span>
-<div style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-top:0.3rem;">ChiliDoc AI</div>
-<div style="font-size:0.78rem; color:#64748b; font-weight:500;">Asisten Patologi Digital Cabai</div>
+<div class="sidebar-brand-card">
+    <div class="sidebar-brand-icon">🌶️</div>
+    <div class="sidebar-brand-title">ChiliDoc AI</div>
+    <div class="sidebar-brand-subtitle">Asisten Patologi Digital Cabai</div>
 </div>
 """, unsafe_allow_html=True)
 
-    st.markdown("---")
-
     st.markdown("""
-<div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1rem 1.1rem; margin-bottom:1rem;">
-<div style="font-weight:700; color:#14532d; font-size:0.88rem; margin-bottom:0.6rem;">💡 Tips Foto Terbaik</div>
-<div style="font-size:0.82rem; color:#166534; line-height:1.7;">
-📏 <b>Jarak</b>: 10–20 cm dari daun/buah<br>
-☀️ <b>Cahaya</b>: Terang merata, hindari bayangan<br>
-🔍 <b>Fokus</b>: Tekstur bercak harus tajam<br>
-🌿 <b>Objek</b>: Pastikan cabai mengisi frame
-</div>
+<div class="sidebar-tips-card">
+    <div class="sidebar-tips-title">💡 Tips Foto Terbaik</div>
+    <div class="sidebar-tips-item">
+        📏 <b>Jarak:</b> 10–20 cm dari permukaan objek<br>
+        ☀️ <b>Cahaya:</b> Terang merata, hindari bayangan<br>
+        🔍 <b>Fokus:</b> Tekstur bercak harus tajam<br>
+        🌿 <b>Objek:</b> Pastikan daun/buah mengisi frame
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -951,18 +1381,18 @@ with st.sidebar:
 
     with st.expander("📊 Spesifikasi Model", expanded=False):
         st.markdown(f"""
-<div style="font-size:0.83rem; color:#334155; line-height:1.9;">
-🧠 <b>Arsitektur</b>: MobileNetV2<br>
-📂 <b>Data Latih</b>: 4.600+ Citra<br>
-✅ <b>Status</b>: <code>Aktif</code><br>
-🏷️ <b>Cakupan</b>: 10 Kelas Lengkap
+<div style="font-size:0.84rem; color:#e2e8f0; line-height:2.1; padding:0.2rem 0;">
+🧠 <b>Arsitektur:</b> MobileNetV2 Transfer Learning<br>
+📂 <b>Data Latih:</b> 4.600+ Citra (Mendeley + Kaggle)<br>
+✅ <b>Status Model:</b> <code style="color:#6ee7b7; background:#064e3b; border:1px solid #059669; padding:2px 8px; border-radius:6px; font-weight:700;">Aktif</code><br>
+🏷️ <b>Cakupan:</b> 10 Penyakit, Hama & Nutrisi
 </div>
 """, unsafe_allow_html=True)
 
-    st.markdown("---")
     st.markdown("""
-<div style="font-size:0.76rem; color:#94a3b8; text-align:center; line-height:1.6;">
-ChiliDoc AI v2.0<br>MobileNetV2 · TensorFlow · Streamlit
+<div style="text-align:center; padding:1.2rem 0 0.5rem; color:#94a3b8; font-size:0.75rem; line-height:1.6;">
+    ChiliDoc AI v2.0<br>
+    MobileNetV2 · TensorFlow · Streamlit
 </div>
 """, unsafe_allow_html=True)
 
@@ -971,51 +1401,43 @@ ChiliDoc AI v2.0<br>MobileNetV2 · TensorFlow · Streamlit
 # ==========================================
 st.markdown("""
 <div class="hero-banner">
-<div class="hero-eyebrow">🌱 DOKTER DIGITAL TANAMAN CABAI</div>
-<h1 class="hero-title">ChiliDoc AI</h1>
-<p class="hero-subtitle">Deteksi penyakit daun & buah cabai secara instan menggunakan kecerdasan buatan berbasis 10 kelas penyakit lengkap — akurat, cepat, dan mudah digunakan.</p>
-<div class="hero-stats">
-<div class="hero-stat-item"><span class="hero-stat-num">10</span><span class="hero-stat-lbl">Kelas Penyakit</span></div>
-<div class="hero-stat-item"><span class="hero-stat-num">4.600+</span><span class="hero-stat-lbl">Data Latih</span></div>
-<div class="hero-stat-item"><span class="hero-stat-num">&lt;3 dtk</span><span class="hero-stat-lbl">Waktu Analisis</span></div>
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-# Panduan 3 Langkah Cepat
-c1, c2, c3 = st.columns(3)
-with c1:
-    st.markdown("""
-<div class="step-box">
-<div class="step-num">1</div>
-<div>
-<div class="step-title">📸 Ambil / Unggah Foto</div>
-<div class="step-desc">Foto daun atau buah cabai</div>
-</div>
-</div>
-""", unsafe_allow_html=True)
-with c2:
-    st.markdown("""
-<div class="step-box">
-<div class="step-num">2</div>
-<div>
-<div class="step-title">🤖 Analisis Otomatis</div>
-<div class="step-desc">AI mencocokkan ciri penyakit</div>
-</div>
-</div>
-""", unsafe_allow_html=True)
-with c3:
-    st.markdown("""
-<div class="step-box">
-<div class="step-num">3</div>
-<div>
-<div class="step-title">💊 Solusi & Penanganan</div>
-<div class="step-desc">Panduan alami & kimiawi</div>
-</div>
+    <div class="hero-eyebrow">🌱 DOKTER DIGITAL TANAMAN CABAI</div>
+    <h1 class="hero-title">ChiliDoc AI</h1>
+    <p class="hero-subtitle">Deteksi penyakit daun & buah cabai secara instan menggunakan kecerdasan buatan berbasis 10 kelas penyakit lengkap — akurat, cepat, dan mudah digunakan.</p>
+    <div class="hero-stats">
+        <div class="hero-stat-item"><span class="hero-stat-num">10</span><span class="hero-stat-lbl">Kelas Penyakit</span></div>
+        <div class="hero-stat-item"><span class="hero-stat-num">4.600+</span><span class="hero-stat-lbl">Data Latih</span></div>
+        <div class="hero-stat-item"><span class="hero-stat-num">&lt;3 dtk</span><span class="hero-stat-lbl">Waktu Analisis</span></div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<div style='margin-bottom: 1.5rem;'></div>", unsafe_allow_html=True)
+# Panduan 3 Langkah Cepat (Responsif via CSS Grid)
+st.markdown("""
+<div class="steps-grid">
+    <div class="step-box">
+        <div class="step-num">1</div>
+        <div>
+            <div class="step-title">📸 Ambil / Unggah Foto</div>
+            <div class="step-desc">Foto daun atau buah cabai</div>
+        </div>
+    </div>
+    <div class="step-box">
+        <div class="step-num">2</div>
+        <div>
+            <div class="step-title">🤖 Analisis Otomatis</div>
+            <div class="step-desc">AI mencocokkan ciri penyakit</div>
+        </div>
+    </div>
+    <div class="step-box">
+        <div class="step-num">3</div>
+        <div>
+            <div class="step-title">💊 Solusi & Penanganan</div>
+            <div class="step-desc">Panduan alami & kimiawi</div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 if not model_ok:
     st.error(f"❌ Gagal memuat model AI: {model_err}")
@@ -1243,7 +1665,7 @@ AI menolak mendiagnosis untuk mencegah kesalahan analisis dan menjaga keakuratan
                 sinergi_desc = sinergi.get('penjelasan', f"Tanaman menunjukkan komplikasi antara {c1} dan {c2}.") if sinergi else f"Dua gejala aktif terdeteksi: {c1} ({p1_raw:.1f}%) dan {c2} ({p2_raw:.1f}%)."
 
                 st.markdown(f"""
-<div class="card-pro" style="border-left:5px solid #ef4444; background:linear-gradient(135deg,#fffcfc,#fffdf7);">
+<div class="card-pro" style="border-radius:24px; border:1.5px solid rgba(226,232,240,0.8); border-left:6px solid #ef4444; box-shadow:0 16px 40px -8px rgba(0,0,0,0.35), 0 4px 16px rgba(239,68,68,0.15); background:linear-gradient(135deg,#fffbfb,#ffffff);">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:8px;">
 <span class="diag-badge {status_class}">{status_text}</span>
 <span style="font-size:0.82rem; font-weight:700; color:#94a3b8;">{info1.get('organ','Tanaman Cabai')}</span>
@@ -1277,19 +1699,19 @@ AI menolak mendiagnosis untuk mencegah kesalahan analisis dan menjaga keakuratan
 </div>""" if is_early else ""
 
                 st.markdown(f"""
-<div class="card-pro" style="border-left:5px solid {'#22c55e' if (is_healthy or is_healthy_fruit) else '#fbbf24' if is_deficiency else '#ef4444'}; background:{'linear-gradient(135deg,#f0fdf4,#fafffe)' if (is_healthy or is_healthy_fruit) else 'linear-gradient(135deg,#fffdf0,#fafffe)' if is_deficiency else 'linear-gradient(135deg,#fffcfc,#fafffe)'};">
+<div class="card-pro" style="border-radius:24px; border:1.5px solid rgba(226,232,240,0.8); border-left:6px solid {'#22c55e' if (is_healthy or is_healthy_fruit) else '#fbbf24' if is_deficiency else '#ef4444'}; box-shadow:0 16px 40px -8px rgba(0,0,0,0.35), 0 4px 16px rgba(5,150,105,0.08); background:{'linear-gradient(135deg,#f0fdf4,#ffffff)' if (is_healthy or is_healthy_fruit) else 'linear-gradient(135deg,#fffdf0,#ffffff)' if is_deficiency else 'linear-gradient(135deg,#fffbfb,#ffffff)'};">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:8px;">
 <span class="diag-badge {status_class}">{status_text}</span>
-<span style="font-size:0.82rem; font-weight:700; color:#94a3b8;">{info1.get('organ','Tanaman Cabai')}</span>
+<span style="font-size:0.84rem; font-weight:700; color:#64748b;">{info1.get('organ','Tanaman Cabai')}</span>
 </div>
-<div style="font-size:1.75rem; font-weight:800; color:#0f172a; letter-spacing:-0.5px; margin-bottom:0.2rem; line-height:1.2;">{c1_display}</div>
-<div style="color:#94a3b8; font-size:0.84rem; font-style:italic; margin-bottom:0.9rem;">{info1.get('nama_latin','')} &nbsp;·&nbsp; {info1.get('tipe','')}</div>
-<p style="font-size:0.9rem; color:#475569; line-height:1.65; margin-bottom:0.9rem;">{info1.get('ringkasan','')}</p>
+<div style="font-size:1.85rem; font-weight:800; color:#0f172a; letter-spacing:-0.5px; margin-bottom:0.25rem; line-height:1.2;">{c1_display}</div>
+<div style="color:#64748b; font-size:0.86rem; font-style:italic; margin-bottom:0.9rem;">{info1.get('nama_latin','')} &nbsp;·&nbsp; {info1.get('tipe','')}</div>
+<p style="font-size:0.92rem; color:#334155; line-height:1.65; margin-bottom:0.95rem;">{info1.get('ringkasan','')}</p>
 {early_notice}
-<div style="display:flex; justify-content:space-between; align-items:center; background:#fafafa; border:1.5px solid #e8edf3; border-radius:14px; padding:0.9rem 1.2rem;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:16px; padding:0.9rem 1.3rem;">
 <div>
-<div style="font-weight:700; font-size:0.88rem; color:#334155;">Tingkat Keyakinan AI</div>
-<div style="font-size:0.76rem; color:#94a3b8; margin-top:2px;">Berdasarkan analisis visual citra</div>
+<div style="font-weight:700; font-size:0.9rem; color:#1e293b;">Tingkat Keyakinan AI</div>
+<div style="font-size:0.78rem; color:#64748b; margin-top:2px;">Berdasarkan analisis visual citra</div>
 </div>
 <div class="{pill_cls}">
 <span class="{num_cls}">{c1_conf:.1f}</span><span class="{unit_cls}">%</span>
@@ -1298,30 +1720,27 @@ AI menolak mendiagnosis untuk mencegah kesalahan analisis dan menjaga keakuratan
 </div>
 """, unsafe_allow_html=True)
 
-            # ── 3 Mini Stat Cards ──
-            s1, s2, s3 = st.columns(3)
-            with s1:
-                st.markdown(f"""
-<div class="stat-card">
-<div class="stat-label">⚠️ Tingkat Bahaya</div>
-<div class="stat-value">{info1.get('keparahan','-')}</div>
-</div>""", unsafe_allow_html=True)
-            with s2:
-                st.markdown(f"""
-<div class="stat-card">
-<div class="stat-label">⏰ Urgensi</div>
-<div class="stat-value">{info1.get('urgensi','-')}</div>
-</div>""", unsafe_allow_html=True)
-            with s3:
-                st.markdown(f"""
-<div class="stat-card">
-<div class="stat-label">🏷️ Kategori</div>
-<div class="stat-value">{'Komplikasi Ganda' if is_multi else info1.get('tipe','-')}</div>
-</div>""", unsafe_allow_html=True)
+            # ── 3 Mini Stat Cards (Responsif CSS Grid: Tidak Terpotong di Mobile/Tablet) ──
+            st.markdown(f"""
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-label">⚠️ Tingkat Bahaya</div>
+        <div class="stat-value">{info1.get('keparahan','-')}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">⏰ Urgensi</div>
+        <div class="stat-value">{info1.get('urgensi','-')}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">🏷️ Kategori</div>
+        <div class="stat-value">{'Komplikasi Ganda' if is_multi else info1.get('tipe','-')}</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
             # ── Probabilitas Top 3 ──
-            st.markdown("<div style='margin-top:1.2rem; font-weight:700; font-size:0.9rem; color:#334155;'>📊 Distribusi Kemungkinan Diagnosa</div>", unsafe_allow_html=True)
-            st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='margin-top:1.4rem; font-weight:800; font-size:0.94rem; color:#ffffff;'>📊 Distribusi Kemungkinan Diagnosa</div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:0.35rem;'></div>", unsafe_allow_html=True)
 
             preds_display = diag["preds_adj"]
             PROB_COLORS = ["#059669", "#f59e0b", "#94a3b8"]
@@ -1333,12 +1752,12 @@ AI menolak mendiagnosis untuk mencegah kesalahan analisis dan menjaga keakuratan
                 is_secondary = (is_multi and idx == diag["c2_idx"])
                 badge = " ⭐" if is_primary else (" ⚠️" if is_secondary else "")
                 bar_color = PROB_COLORS[i]
-                weight = "font-weight:800; color:#0f172a;" if is_primary else "color:#64748b;"
+                weight = "font-weight:800; color:#f8fafc;" if is_primary else "color:#cbd5e1;"
                 st.markdown(f"""
-<div style="margin-bottom:0.65rem;">
+<div style="margin-bottom:0.7rem;">
 <div class="prob-row">
-<span style="{weight} font-size:0.86rem;">{c_name}{badge}</span>
-<span style="{weight} font-size:0.86rem;">{p_val:.1f}%</span>
+<span style="{weight} font-size:0.88rem;">{c_name}{badge}</span>
+<span style="{weight} font-size:0.88rem;">{p_val:.1f}%</span>
 </div>
 <div class="prob-bar-track">
 <div class="prob-bar-fill" style="width:{min(p_val,100):.1f}%; background:{bar_color};"></div>
@@ -1348,15 +1767,15 @@ AI menolak mendiagnosis untuk mencegah kesalahan analisis dan menjaga keakuratan
     # ==========================================
     # 9. PANDUAN AKSI & SOLUSI LENGKAP
     # ==========================================
-    st.markdown("<hr style='margin:1.6rem 0 1.2rem;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin:1.8rem 0 1.4rem; border-color:rgba(255,255,255,0.1) !important;'>", unsafe_allow_html=True)
 
     if is_valid:
-        # Header panduan
-        judul_panduan = f"Panduan Penanganan: **{c1} + {c2}**" if is_multi else f"Panduan Penanganan: **{c1_display}**"
+        # Header panduan (Teks Putih Terang & Kontras Jelas)
+        judul_panduan = f"Panduan Penanganan: {c1} + {c2}" if is_multi else f"Panduan Penanganan: {c1_display}"
         st.markdown(f"""
-<div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
-<div style="background:linear-gradient(135deg,#047857,#059669); border-radius:10px; padding:6px 10px; color:white; font-size:1.1rem;">📋</div>
-<div style="font-size:1.1rem; font-weight:800; color:#0f172a;">{judul_panduan}</div>
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
+<div style="background:linear-gradient(135deg,#059669,#047857); border-radius:12px; padding:7px 12px; color:white; font-size:1.25rem; box-shadow:0 4px 14px rgba(5,150,105,0.4);">📋</div>
+<div style="font-size:1.3rem; font-weight:800; color:#ffffff; letter-spacing:-0.4px;">{judul_panduan}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1369,75 +1788,75 @@ AI menolak mendiagnosis untuk mencegah kesalahan analisis dan menjaga keakuratan
         ])
 
         with tab_darurat:
-            st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:0.4rem;'></div>", unsafe_allow_html=True)
             if is_multi and sinergi and "rekomendasi_darurat" in sinergi:
-                st.markdown("<div style='font-weight:700; font-size:0.9rem; color:#dc2626; margin-bottom:0.6rem;'>⚡ Prioritas Utama (Sinergi 2 Penyakit):</div>", unsafe_allow_html=True)
+                st.markdown("<div style='font-weight:800; font-size:0.94rem; color:#f87171; margin-bottom:0.7rem;'>⚡ Prioritas Utama (Sinergi 2 Penyakit):</div>", unsafe_allow_html=True)
                 for step in sinergi["rekomendasi_darurat"]:
                     st.markdown(f'<div class="action-step action-step-red"><strong>👉</strong> {step}</div>', unsafe_allow_html=True)
                 st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
 
             if not is_healthy and not is_healthy_fruit:
-                st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin-bottom:0.6rem;'>Tindakan untuk {c1}:</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin-bottom:0.7rem;'>Tindakan untuk {c1}:</div>", unsafe_allow_html=True)
                 darurat1 = info1.get("darurat", [])
                 if darurat1:
                     for step in darurat1:
                         st.markdown(f'<div class="action-step"><strong>👉</strong> {step}</div>', unsafe_allow_html=True)
                 if is_multi:
-                    st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin:0.8rem 0 0.6rem;'>Tindakan tambahan untuk {c2}:</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin:1rem 0 0.7rem;'>Tindakan tambahan untuk {c2}:</div>", unsafe_allow_html=True)
                     for step in info2.get("darurat", []):
                         st.markdown(f'<div class="action-step action-step-warn"><strong>👉</strong> {step}</div>', unsafe_allow_html=True)
             else:
                 st.markdown("""
-<div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:14px; padding:1.1rem 1.3rem; display:flex; align-items:center; gap:12px;">
-<span style="font-size:1.8rem;">✅</span>
+<div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:16px; padding:1.2rem 1.4rem; display:flex; align-items:center; gap:14px; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+<span style="font-size:2rem;">✅</span>
 <div>
-<div style="font-weight:700; color:#14532d; font-size:0.93rem;">Tanaman dalam kondisi prima!</div>
-<div style="font-size:0.85rem; color:#166534; margin-top:3px;">Tidak diperlukan tindakan darurat. Lanjutkan perawatan rutin pemeliharaan.</div>
+<div style="font-weight:800; color:#14532d; font-size:0.96rem;">Tanaman dalam kondisi prima!</div>
+<div style="font-size:0.86rem; color:#166534; margin-top:3px;">Tidak diperlukan tindakan darurat. Lanjutkan perawatan rutin pemeliharaan.</div>
 </div>
 </div>
 """, unsafe_allow_html=True)
 
         with tab_alami:
-            st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
-            st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin-bottom:0.5rem;'>Solusi alami untuk {c1}:</div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:0.4rem;'></div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin-bottom:0.6rem;'>Solusi alami untuk {c1}:</div>", unsafe_allow_html=True)
             st.success(info1.get("alami", "Informasi tidak tersedia."))
             if is_multi:
-                st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin:0.8rem 0 0.5rem;'>Solusi alami untuk {c2}:</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin:1rem 0 0.6rem;'>Solusi alami untuk {c2}:</div>", unsafe_allow_html=True)
                 st.success(info2.get("alami", "Informasi tidak tersedia."))
             st.info("💡 **Tips:** Pengendalian organik paling efektif diaplikasikan pagi hari sebelum terik matahari.")
 
         with tab_kimiawi:
-            st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:0.4rem;'></div>", unsafe_allow_html=True)
             if is_healthy or is_healthy_fruit:
                 st.info("✅ Tanaman sehat — tidak memerlukan aplikasi pestisida kimia.")
             else:
-                st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin-bottom:0.5rem;'>Bahan aktif untuk {c1}:</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin-bottom:0.6rem;'>Bahan aktif untuk {c1}:</div>", unsafe_allow_html=True)
                 st.warning(info1.get("kimiawi", "Informasi tidak tersedia."))
                 if is_multi:
-                    st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin:0.8rem 0 0.5rem;'>Bahan aktif untuk {c2}:</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin:1rem 0 0.6rem;'>Bahan aktif untuk {c2}:</div>", unsafe_allow_html=True)
                     st.warning(info2.get("kimiawi", "Informasi tidak tersedia."))
                 st.caption("⚠️ Gunakan bahan kimia sesuai petunjuk kemasan. Kenakan masker & sarung tangan saat aplikasi.")
 
         with tab_gejala:
-            st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
-            st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin-bottom:0.5rem;'>Karakteristik gejala {c1}:</div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:0.4rem;'></div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin-bottom:0.6rem;'>Karakteristik gejala {c1}:</div>", unsafe_allow_html=True)
             st.info(info1.get("gejala", "Informasi tidak tersedia."))
             if is_multi:
-                st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin:0.8rem 0 0.5rem;'>Karakteristik gejala {c2}:</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin:1rem 0 0.6rem;'>Karakteristik gejala {c2}:</div>", unsafe_allow_html=True)
                 st.info(info2.get("gejala", "Informasi tidak tersedia."))
 
         with tab_cegah:
-            st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
-            st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin-bottom:0.5rem;'>Pencegahan jangka panjang:</div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:0.4rem;'></div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin-bottom:0.6rem;'>Pencegahan jangka panjang:</div>", unsafe_allow_html=True)
             st.markdown(f"""
-<div class="card-section" style="font-size:0.9rem; color:#334155; line-height:1.7;">
+<div class="card-section" style="font-size:0.9rem; line-height:1.7;">
 {info1.get('pencegahan','Informasi tidak tersedia.')}
 </div>
 """, unsafe_allow_html=True)
             if is_multi:
-                st.markdown(f"<div style='font-weight:700; font-size:0.9rem; color:#334155; margin:0.8rem 0 0.5rem;'>Pencegahan untuk {c2}:</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-weight:700; font-size:0.92rem; color:#f1f5f9; margin:1rem 0 0.6rem;'>Pencegahan untuk {c2}:</div>", unsafe_allow_html=True)
                 st.markdown(f"""
-<div class="card-section" style="font-size:0.9rem; color:#334155; line-height:1.7;">
+<div class="card-section" style="font-size:0.9rem; line-height:1.7;">
 {info2.get('pencegahan','Informasi tidak tersedia.')}
 </div>
 """, unsafe_allow_html=True)
